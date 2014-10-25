@@ -3,16 +3,22 @@
 <html>
 <head>
   <title>map</title>
-  <script src="./bower_components/angular/angular.min.js"></script>
+  <script src="./bower_components/angular/angular.js"></script>
   <script src="./bower_components/lodash/dist/lodash.min.js"></script>
   <script src="./bower_components/bluebird/js/browser/bluebird.js"></script>
-  <script src="./bower_components/angular-google-maps/dist/angular-google-maps.min.js"></script>
+  <script src="./bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
   <script src="./app.js"></script>
   <link rel="stylesheet" type="text/css" href="./mapStyle.css">
 </head>
 <body>
   <div id="map_canvas" ng-controller="mapController">
-    <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options"></ui-gmap-google-map>
+    <script type="text/ng-template" id="searchbox.tpl.html">
+      <input type="text" placeholder="Search Box"></input>
+    </script>
+    <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">
+      <ui-gmap-search-box template="searchbox.template" position="searchbox.position" events="searchbox.events">
+      </ui-gmap-search-box>
+    </ui-gmap-google-map>
   </div>
 </body>
 </html>
