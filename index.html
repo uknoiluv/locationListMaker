@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html ng-app="map">
+<html>
+<head>
+  <title>map</title>
+  <script src="./bower_components/angular/angular.min.js"></script>
+  <script src="./bower_components/lodash/dist/lodash.min.js"></script>
+  <script src="./bower_components/bluebird/js/browser/bluebird.js"></script>
+  <script src="./bower_components/angular-google-maps/dist/angular-google-maps.min.js"></script>
+  <script src="./app.js"></script>
+  <link rel="stylesheet" type="text/css" href="./mapStyle.css">
+</head>
+<body>
+  <div id="map_canvas" ng-controller="mapController">
+    <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options"></ui-gmap-google-map>
+  </div>
+</body>
+</html>
