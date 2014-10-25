@@ -1,12 +1,34 @@
 
-angular.module('map', ['google-maps'.ns()])
-  .config(['GoogleMapApiProvider'.ns(), function (GoogleMapApi) {
+var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
+
+  app.config(['GoogleMapApiProvider'.ns(), '$stateProvider', '$urlRouterProvider', function (GoogleMapApi, $stateProvider, $urlRouterProvider) {
+    
+    $urlRouterProvider.otherwise('/findPlace');
+
+    $stateProvider
+      .state('findPlace', {
+        url: '/findPlace',
+        template: '<div>findPlace</div>'
+        // templateUrl: '/partials/findPlace.html'
+      })
+      .state('savedList', {
+        url: '/savedList',
+        template: '<div>savedList</div>'
+        // templateUrl: '/partials/savedList.html'
+      })
+      .state('searchHistory', {
+        url: '/searchHistory',
+        template: '<div>searchHistory</div>'
+        // templateUrl: '/partials/searchHistory.html'
+      });
+
     GoogleMapApi.configure({
         // key: 'your api key',
         v: '3.17',
         libraries: 'weather,geometry,visualization,places',
         sensor: 'false'
     });
+    
   }]).controller('mapController',['$scope', 'GoogleMapApi'.ns(), function($scope, GoogleMapApi){
     // do stuff with scope
     var getLoc = {

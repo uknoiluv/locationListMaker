@@ -7,10 +7,24 @@
   <script src="./bower_components/lodash/dist/lodash.min.js"></script>
   <script src="./bower_components/bluebird/js/browser/bluebird.js"></script>
   <script src="./bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
+  <script src="./bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="./app.js"></script>
+  <!--<script src="./routeConfig.js"</script>-->
   <link rel="stylesheet" type="text/css" href="./mapStyle.css">
 </head>
 <body>
+  
+  <div>
+    <header>AngularGoogleMap</header>
+  </div>
+  
+  
+  <a ui-sref="findPlace">Find place</a>
+  <a ui-sref="savedList">Saved List</a>
+  <a ui-sref="searchHistory">Search History</a>
+
+  <div ui-view></div>
+
   <div id="map_canvas" ng-controller="mapController">
     <script type="text/ng-template" id="searchbox.tpl.html">
       <input id="pac-input" class="controls" type="text" placeholder="Search Box"></input>
