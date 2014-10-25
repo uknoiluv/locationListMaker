@@ -12,6 +12,7 @@ angular.module('map', ['google-maps'.ns()])
     var getLoc = {
       places_changed: function(data){
         var places = data.getPlaces();
+        console.log('places', places);
         var latitude = places[0].geometry.location.k;
         var longitude = places[0].geometry.location.B;
         $scope.map.center = {latitude: latitude, longitude: longitude};

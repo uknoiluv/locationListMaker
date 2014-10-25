@@ -13,7 +13,7 @@
 <body>
   <div id="map_canvas" ng-controller="mapController">
     <script type="text/ng-template" id="searchbox.tpl.html">
-      <input type="text" placeholder="Search Box"></input>
+      <input id="pac-input" class="controls" type="text" placeholder="Search Box"></input>
     </script>
     <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">
       <ui-gmap-search-box template="searchbox.template" position="searchbox.position" events="searchbox.events">
