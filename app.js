@@ -8,38 +8,43 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
     $stateProvider
       .state('findPlace', {
         url: '/findPlace',
-        template: '<div>findPlace</div>' +
-        '<div id="map_canvas">' +
-
-    '<script type="text/ng-template" id="searchbox.tpl.html">' +
-      '<input id="pac-input" class="controls" type="text" placeholder="Search Box"></input>' +
-    '</script>' +
-
-    '<script type="text/ng-template" id="control.tpl.html">' +
-        '<button class="btn" ng-click="controlClick()">{{controlText}}</button>' +
-    '</script>' +
+        template: '<div id="map_canvas">' +
+        '<script type="text/ng-template" id="searchbox.tpl.html">' +
+          '<input id="pac-input" class="controls" type="text" placeholder="Search Box"></input>' +
+        '</script>' +
+        '<script type="text/ng-template" id="control.tpl.html">' +
+            '<button class="btn" ng-click="controlClick()">{{controlText}}</button>' +
+        '</script>' +
 
         '<ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">' +
-      '<ui-gmap-search-box template="searchbox.template" position="searchbox.position" events="searchbox.events">' +
-      '</ui-gmap-search-box>' +
+        '<ui-gmap-search-box template="searchbox.template" position="searchbox.position" events="searchbox.events">' +
+        '</ui-gmap-search-box>' +
       
-      '<ui-gmap-map-control template="control.tpl.html" position="top-left" controller="customController" index="-1"></ui-gmap-map-control>' +
+        '<ui-gmap-map-control template="control.tpl.html" position="top-left" controller="customController" index="-1"></ui-gmap-map-control>' +
       
-      '<ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id">' +
-      '</ui-gmap-marker>' +
-    '</ui-gmap-google-map>' +
-    '</div>',
+        '<ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id">' +
+        '</ui-gmap-marker>' +
+        '</ui-gmap-google-map>' +
+        '</div>',
         controller: 'mapController'
         // templateUrl: '/partials/findPlace.html'
       })
       .state('savedList', {
         url: '/savedList',
-        template: '<div>savedList</div>'
+        template: '<div>Saved List</div>' +
+        '<ul><li ng-repeat="item in list">' + 
+        '{{$index + 1}} {{item.formatted_address}}'  +   
+        '</li></ul>',
+        controller: 'savedListController'
         // templateUrl: '/partials/savedList.html'
       })
       .state('searchHistory', {
         url: '/searchHistory',
-        template: '<div>searchHistory</div>'
+        template: '<div>Search History</div>' +
+        '<ul><li ng-repeat="item in list">' + 
+        '{{$index + 1}} {{item.formatted_address}} {{item.date}}'  +   
+        '</li></ul>',
+        controller: 'searchHistoryController'
         // templateUrl: '/partials/searchHistory.html'
       });
 
@@ -90,10 +95,10 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
   app.controller('customController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function($scope, GoogleMapApi, Data){
     $scope.controlText = 'save the marker to the list';
     $scope.controlClick = function(){
-      console.log('Data2', Data);
-      console.log('_.some', _.some(Data.savedList, function(item){
-        return item.id === Data.marker.id
-      }));
+      // console.log('Data2', Data);
+      // console.log('_.some', _.some(Data.savedList, function(item){
+      //   return item.id === Data.marker.id
+      // }));
       if(Data.searched && !_.some(Data.savedList, function(item){
         return item.id === Data.marker.id
       })){
@@ -105,6 +110,19 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
       console.log('Data.savedList', Data.savedList);
     };
   }]);
+
+  app.controller('savedListController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function($scope, GoogleMapApi, Data){
+    $scope.list = Data.savedList;
+    console.log(Data.savedList);
+
+  }]);
+
+  app.controller('searchHistoryController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function($scope, GoogleMapApi, Data){
+    $scope.list = Data.searchHistory;
+    console.log(Data.searchHistory);
+
+  }]);
+
 
   app.factory('Data', function(){
     return {searched: false, savedList: [], searchHistory: [], marker:{}};
