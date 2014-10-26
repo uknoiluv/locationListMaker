@@ -43,3 +43,14 @@ header {
   height: 100px;
   font-size: 50px;
 }
+
+.btn {
+  margin-top: 16px;  
+  margin-left: 30px;
+  height: 32px;
+  outline: none;
+  background-color: #6699FF;
+  color: white;
+  font-family: Georgia;
+  font-size: 15px;
+}

@@ -28,17 +28,25 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
         libraries: 'weather,geometry,visualization,places',
         sensor: 'false'
     });
-    
+
   }]).controller('mapController',['$scope', 'GoogleMapApi'.ns(), function($scope, GoogleMapApi){
     // do stuff with scope
+    var searched = false;
     var getLoc = {
       places_changed: function(data){
+        console.log('searched1', searched);
+        searched = true;
         var places = data.getPlaces();
-        console.log('places', places);
+        console.log('places1', places[0]);
         var latitude = places[0].geometry.location.k;
         var longitude = places[0].geometry.location.B;
         $scope.map.center = {latitude: latitude, longitude: longitude};
         $scope.marker.coords = {latitude: latitude, longitude: longitude};
+        $scope.marker.info = places[0];
+        places[0].date = new Date();
+        console.log('places2', places[0]);
+        $scope.searchHistory.push(places[0]);
+        console.log('searched2', searched);
       }
     };
     $scope.map = {center: {latitude: 51.219053, longitude: 4.404418 }, zoom: 14 };
@@ -49,6 +57,16 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
       coords: $scope.map.center,
       options: {
         draggable: false
+      }
+    };
+    $scope.searchHistory = [];
+    $scope.savedList = [];
+    $scope.controlText = 'save the marker to the list';
+    $scope.controlClick = function(){
+      if(searched && !$scope.savedList[$scope.marker.info.id]){
+        $scope.savedList[$scope.marker.info.id] = $scope.marker.info;
+      }else{
+        // show "already in the list"
       }
     };
 
