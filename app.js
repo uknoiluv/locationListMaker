@@ -31,18 +31,22 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
       })
       .state('savedList', {
         url: '/savedList',
-        template: '<div>Saved List</div>' +
+        template: '<div id="map_canvas">' +
+        '<ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">' +
+        '<ui-gmap-markers models="list" coords="\'coords\'">' +
+        '</ui-gmap-markers>' +
+        '</ui-gmap-google-map>' +
         '<ul><li ng-repeat="item in list">' + 
-        '{{$index + 1}} {{item.formatted_address}}'  +   
-        '</li></ul>',
+        '{{$index + 1}} {{item.formatted_address}}' +   
+        '</li></ul>' +
+        '</div>',
         controller: 'savedListController'
         // templateUrl: '/partials/savedList.html'
       })
       .state('searchHistory', {
         url: '/searchHistory',
-        template: '<div>Search History</div>' +
-        '<ul><li ng-repeat="item in list">' + 
-        '{{$index + 1}} {{item.formatted_address}} {{item.date}}'  +   
+        template: '<ul><li ng-repeat="item in list">' + 
+        '{{$index + 1}} {{item.formatted_address}} {{item.date | date:"medium"}}'  +   
         '</li></ul>',
         controller: 'searchHistoryController'
         // templateUrl: '/partials/searchHistory.html'
@@ -102,6 +106,7 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
       if(Data.searched && !_.some(Data.savedList, function(item){
         return item.id === Data.marker.id
       })){
+        Data.marker.coords = {latitude: Data.marker.geometry.location.k, longitude: Data.marker.geometry.location.B}
         Data.savedList.push(Data.marker);
       }else{
         console.log('already in the list')
@@ -112,9 +117,42 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
   }]);
 
   app.controller('savedListController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function($scope, GoogleMapApi, Data){
-    $scope.list = Data.savedList;
     console.log(Data.savedList);
-
+    $scope.list = Data.savedList;
+    var findBound = function(){
+      var northeast = {latitude: undefined, longitude: undefined};
+      var southwest = {latitude: undefined, longitude: undefined};
+      for(var i = 0; i < Data.savedList.length; i++){
+        var lat = Data.savedList[i].geometry.location.k;
+        var lon = Data.savedList[i].geometry.location.B;
+        !northeast.latitude || lat > northeast.latitude ? northeast.latitude = lat: null;
+        !northeast.longitude || lon > northeast.longitude ? northeast.longitude = lon: null;
+        !southwest.latitude || lat < southwest.latitude ? southwest.latitude = lat: null;
+        !southwest.longitude || lon < southwest.longitude ? southwest.longitude = lon: null;
+      }
+      return {northeast: northeast, southwest: southwest};
+    }
+    var bounds = findBound();
+    var center = {latitude: (bounds.northeast.latitude + bounds.southwest.latitude) / 2, longitude: (bounds.northeast.longitude + bounds.southwest.longitude) / 2};
+    console.log('bounds', bounds);
+    console.log('center1', center);
+    var mil = Math.pow(10, 4);
+    console.log('mil', mil);
+    center.latitude = Math.round(center.latitude * mil) / mil;
+    center.longitude = Math.round(center.longitude * mil) / mil;
+    console.log('center2', center);
+    var GLOBE_WIDTH = 256; // a constant in Google's map projection
+    //var west = bounds.southwest.longitude;//sw.lng();
+    //var east = bounds.northeast.longitude;//ne.lng();
+    var angleLon = bounds.northeast.longitude - bounds.southwest.longitude;
+    var angleLat = bounds.northeast.latitude - bounds.southwest.latitude;
+    angleLon < 0 ? angleLon += 360 : null;
+    angleLat < 0 ? angleLat += 180 : null;
+    var angle = angleLon > angleLat ? angleLon : angleLat;//east - west;
+    var zoom = Math.round(Math.log(200 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
+    console.log('zoom', zoom);
+    $scope.map = {bounds: bounds, center: center, zoom: zoom};
+    $scope.options = {scrollwheel: false};
   }]);
 
   app.controller('searchHistoryController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function($scope, GoogleMapApi, Data){
