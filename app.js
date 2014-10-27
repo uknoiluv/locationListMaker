@@ -94,9 +94,9 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
       }
     };
 
-      GoogleMapApi.then(function(maps){
+      // GoogleMapApi.then(function(maps){
 
-      });
+      // });
     }
   ]);
 
@@ -188,6 +188,12 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
     return {defaultLoc:{latitude: 34.440009, longitude: -119.738670} ,searched: false, savedList: [], searchHistory: [], marker:{}};
   });
 
+
+  app.factory('GoogleMapApi', ['GoogleMapApi'.ns(), function(GoogleMapApi){
+    return GoogleMapApi;
+  }]);
+
+
   app.directive('savedList', function(){
     return {
       link: function(scope, element, attr){
@@ -203,3 +209,5 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
       }
     };
   });
+
+
