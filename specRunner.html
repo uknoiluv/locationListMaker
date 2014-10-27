@@ -2,18 +2,18 @@
 <html ng-app="map">
 <html>
 <head>
-  <title>map</title>
+  <title>Spec Runner</title>
   <script src="./bower_components/angular/angular.js"></script>
   <script src="./bower_components/lodash/dist/lodash.min.js"></script>
   <script src="./bower_components/bluebird/js/browser/bluebird.js"></script>
   <script src="./bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
   <script src="./bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-  <script src="./app.js"></script>
+  <script src="./bower_components/jquery/dist/jquery.js"></script>
 
+  <link rel="stylesheet" href="./node_modules/mocha/mocha.css">
   <script src="./node_modules/mocha/mocha.js"></script>
   <script src="./node_modules/chai/chai.js"></script>
   <script src="./node_modules/sinon/lib/sinon.js"></script>
-  <link rel="stylesheet" href="./node_modules/mocha/mocha.css">
   
   <script>
     mocha.setup('bdd');
@@ -22,11 +22,12 @@
       window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run();
     });
   </script>
+  
+  <script src="./node_modules/angular-mocks/angular-mocks.js"></script>
+  <script src="./app.js"></script>
 
   <script src="mapSpec.js"></script>
 
-
-  <!-- <link rel="stylesheet" type="text/css" href="./mapStyle.css"> -->
 </head>
 <body>
   
