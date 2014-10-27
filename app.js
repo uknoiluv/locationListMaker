@@ -13,7 +13,7 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
           '<input id="pac-input" class="controls" type="text" placeholder="Type in location and choose from below"></input>' +
         '</script>' +
         '<script type="text/ng-template" id="control.tpl.html">' +
-            '<button saved-list class="btn" ng-click="controlClick()">{{controlText}}</button><div class="msg">{{msg}}</div>' +
+            '<button saved-inlist class="btn" ng-click="controlClick()">{{controlText}}</button><div class="msg">{{msg}}</div>' +
         '</script>' +
 
         '<ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">' +
@@ -138,6 +138,7 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
         for(var i = 0; i < Data.savedList.length; i++){
           var lat = Data.savedList[i].geometry.location.k;
           var lon = Data.savedList[i].geometry.location.B;
+          console.log('lat', lat, 'lon', lon);
           !northeast.latitude || lat > northeast.latitude ? northeast.latitude = lat: null;
           !northeast.longitude || lon > northeast.longitude ? northeast.longitude = lon: null;
           !southwest.latitude || lat < southwest.latitude ? southwest.latitude = lat: null;
@@ -180,7 +181,6 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
   app.controller('searchHistoryController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function($scope, GoogleMapApi, Data){
     $scope.list = Data.searchHistory;
     console.log(Data.searchHistory);
-
   }]);
 
 
@@ -189,12 +189,12 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
   });
 
 
-  app.factory('GoogleMapApi', ['GoogleMapApi'.ns(), function(GoogleMapApi){
-    return GoogleMapApi;
-  }]);
+  // app.factory('GoogleMapApiService', ['GoogleMapApiService'.ns(), function(GoogleMapApi){
+  //   return GoogleMapApi;
+  // }]);
 
 
-  app.directive('savedList', function(){
+  app.directive('savedInlist', function(){
     return {
       link: function(scope, element, attr){
         scope.$watch('controlText', function(newValue, oldValue){
