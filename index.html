@@ -8,12 +8,11 @@
   <script src="./bower_components/bluebird/js/browser/bluebird.js"></script>
   <script src="./bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
   <script src="./bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-  <script src="./app.js"></script>
-  <script src="./controllers.js"></script>
-  <script src="./directives.js"></script>
-  <script src="./factories.js"></script>
-  <!--<script src="./routeConfig.js"</script>-->
-  <link rel="stylesheet" type="text/css" href="./mapStyle.css">
+  <script src="./app/app.js"></script>
+  <script src="./app/controllers.js"></script>
+  <script src="./app/directives.js"></script>
+  <script src="./app/factories.js"></script>
+  <link rel="stylesheet" type="text/css" href="./app/mapStyle.css">
 </head>
 <body>
   
@@ -27,25 +26,5 @@
   </div>
   <div ui-view></div>
 
-  <!-- <div id="map_canvas" ng-controller="mapController">
-
-    <script type="text/ng-template" id="searchbox.tpl.html">
-      <input id="pac-input" class="controls" type="text" placeholder="Search Box"></input>
-    </script>
-
-    <script type="text/ng-template" id="control.tpl.html">
-        <button class="btn" ng-click="controlClick()">{{controlText}}</button>
-    </script>
-
-    <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">
-      <ui-gmap-search-box template="searchbox.template" position="searchbox.position" events="searchbox.events">
-      </ui-gmap-search-box>
-      
-      <ui-gmap-map-control template="control.tpl.html" position="top-left" controller="customController" index="-1"></ui-gmap-map-control>
-      
-      <ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id">
-      </ui-gmap-marker>
-    </ui-gmap-google-map>
-  </div> -->
 </body>
 </html>

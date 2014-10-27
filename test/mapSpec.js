@@ -2,38 +2,7 @@
 
 describe('Location List Maker', function(){
   
-
-  // var googleMapApi;
   beforeEach(module('map'));
-  // beforeEach(function() {
-  //   // Here we create a fake module just to intercept and store the provider
-  //   // when it's injected, i.e. during the config phase.
-  //   angular.module('dummyModule', function() {})
-  //     .config(['GoogleMapApiProvider'.ns(), function(GoogleMapApi) {
-  //       GoogleMapApi.configure({
-  //         // key: 'your api key',
-  //         v: '3.17',
-  //         libraries: 'weather,geometry,visualization,places',
-  //         sensor: 'false'
-  //       });
-  //       googleMapApi = GoogleMapApi;
-  //     }]);
-
-  //   module('map', 'dummyModule');
-
-  //   // This actually triggers the injection into dummyModule
-  //   inject(function(){});
-  // });
-/**/
-  // beforeEach(function() {
-  //   return this.googleTemp = window.google;
-  // });
-
-  // afterEach(function() {
-  //   return window.google = this.googleTemp;
-  // });
-/**/
-
 
   describe('when Data service is used', function(){
 
@@ -71,9 +40,6 @@ describe('Location List Maker', function(){
     beforeEach(inject(function($rootScope, $controller, _Data_) {
       scope = $rootScope.$new();
       data = _Data_;
-      // googleMapApi = _GoogleMapApi_;
-      // console.log('googleMapApi', googleMapApi);
-      // console.log('this', this);
       ctrl = $controller('mapController', {$scope: scope, _Data_: data}); 
     }));
 
@@ -95,18 +61,12 @@ describe('Location List Maker', function(){
    
       it('should be a function', function(){
         expect(typeof scope.searchbox.events.places_changed).to.equal('function');
-        // expect(typeof scope.map.center).to.equal('object');
-        // expect(scope.map.center.latitude).to.equal(34.440009);
-        // expect(scope.map.center.longitude).to.equal(-119.738670);
-        // expect(scope.options.scrollwheel).to.equal(false);
       });
 
       afterEach(function(){
         expect(data.searched).to.equal(true);
         expect(scope.marker.coords.latitude).to.equal(1);
         expect(scope.marker.coords.longitude).to.equal(1);
-
-        // expect(_.isEqual(scope.marker.info, {geometry: {location: {k: 1, B:1 }}})).to.equal(true);
       });
     });
 
@@ -122,9 +82,7 @@ describe('Location List Maker', function(){
       scope = $rootScope.$new();
       data = _Data_;
       timeout = $timeout;
-      console.log('this', this);
       ctrl = $controller('customController', {$scope: scope, _Data_: data, $timeout: timeout}); 
-      console.log('data', data);
       data.searched = true;
       data.marker.geometry = {location: {k: 1, B:1 }};
       scope.controlClick();
@@ -132,7 +90,6 @@ describe('Location List Maker', function(){
 
     it('should be a string / should wait for 600ms / savedList length should be greater than 0', function(){
       expect(typeof scope.controlText).to.equal('string');
-      // expect(typeof scope.searchbox.events.places_changed).to.equal('function');
     });
 
     afterEach(function(){
@@ -144,7 +101,6 @@ describe('Location List Maker', function(){
 
     });
   });
-
 
   describe('when savedList controller is used', function(){
 
@@ -169,7 +125,6 @@ describe('Location List Maker', function(){
 
   });
 
-
   describe('when searchHistory controller is used', function(){
 
     var scope;
@@ -188,7 +143,6 @@ describe('Location List Maker', function(){
   
   });
 
-
   describe('savedInlist directive', function() {
 
     var element;
@@ -197,7 +151,6 @@ describe('Location List Maker', function(){
 
     beforeEach(inject(function($rootScope, $compile) {
       element = angular.element('<saved-inlist class="btn" ng-click="controlClick()">{{controlText}}</button><div class="msg">{{msg}}</div>');
-      console.log('element', element);
       outerScope = $rootScope;
       $compile(element)(outerScope);
 
@@ -214,17 +167,14 @@ describe('Location List Maker', function(){
       })
 
       it('should be rendered', function() {
-        console.log('element[1]', element[0]);
         expect(element[0].children[0].innerHTML).to.equal('changed');
       });
     });
 
-    
     describe('click callback', function() {
       var mySpy;
 
       beforeEach(function() {
-        console.log('sinon', sinon);
         mySpy = sinon.spy();
         outerScope.$apply(function() {
           outerScope.controlClick = mySpy;
@@ -244,7 +194,4 @@ describe('Location List Maker', function(){
 
   });
 
-
 });
-
-

@@ -70,7 +70,6 @@ header {
 }
 
 .btn:hover {
-  /*background-color: #3366FF;*/
   box-shadow: 0 0 5px rgba(81, 203, 238, 1);
   border: 1px solid rgba(81, 203, 238, 1);
 }
@@ -99,24 +98,20 @@ li {
   margin-bottom: 10px;
 }
 
-/*#map_canvas.savedListMap {
-  width: 70%;
-}*/
-
 li.savedListItem{
   position: relative;
   height: 50px;
   line-height: 50px;
   margin-left: 40px;
-  font-size: 30px;
-  color: #6600CC;
+  font-size: 20px;
+  color: #663300;
+  text-shadow: 2px 2px white;
 }
 
 .labelContent {
   font-size: 15px;
   color: #663300;
   background-color: white;
-  /*border: 1px solid black;*/
   border-radius: 5px;
   box-shadow: 0 0 5px black;
 }
