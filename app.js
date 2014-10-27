@@ -10,10 +10,10 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
         url: '/findPlace',
         template: '<div id="map_canvas">' +
         '<script type="text/ng-template" id="searchbox.tpl.html">' +
-          '<input id="pac-input" class="controls" type="text" placeholder="Search Box"></input>' +
+          '<input id="pac-input" class="controls" type="text" placeholder="Type in location and choose from below"></input>' +
         '</script>' +
         '<script type="text/ng-template" id="control.tpl.html">' +
-            '<button class="btn" ng-click="controlClick()">{{controlText}}</button>' +
+            '<button saved-list class="btn" ng-click="controlClick()">{{controlText}}</button><div class="msg">{{msg}}</div>' +
         '</script>' +
 
         '<ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">' +
@@ -31,23 +31,26 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
       })
       .state('savedList', {
         url: '/savedList',
-        template: '<div id="map_canvas">' +
+        template: '<div id="map_canvas" class="savedListMap">' +
         '<ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">' +
-        '<ui-gmap-markers models="list" coords="\'coords\'">' +
+        '<ui-gmap-markers models="list" coords="\'coords\'" options="\'labelInfo\'">' +
         '</ui-gmap-markers>' +
         '</ui-gmap-google-map>' +
+        '<div class="savedList">' +
         '<ul><li ng-repeat="item in list">' + 
         '{{$index + 1}} {{item.formatted_address}}' +   
-        '</li></ul>' +
+        '</li></ul></div>' +
         '</div>',
         controller: 'savedListController'
         // templateUrl: '/partials/savedList.html'
       })
       .state('searchHistory', {
         url: '/searchHistory',
-        template: '<ul><li ng-repeat="item in list">' + 
-        '{{$index + 1}} {{item.formatted_address}} {{item.date | date:"medium"}}'  +   
-        '</li></ul>',
+        template: '<div class="searchHistory">' +
+        '<ul><li ng-repeat="item in list">' + 
+        '[{{$index + 1}}] {{item.formatted_address}} {{item.date | date:"medium"}}'  +   
+        '</li></ul>' +
+        '</div>',
         controller: 'searchHistoryController'
         // templateUrl: '/partials/searchHistory.html'
       });
@@ -79,7 +82,8 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
         console.log('$scope1', $scope);
       }
     };
-    $scope.map = {center: {latitude: 51.219053, longitude: 4.404418 }, zoom: 14 };
+    
+    $scope.map = {center: Data.defaultLoc, zoom: 14 };
     $scope.options = {scrollwheel: false};
     $scope.searchbox = {template:'searchbox.tpl.html', position:'top-left', events: getLoc};
     $scope.marker = {
@@ -96,8 +100,10 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
     }
   ]);
 
-  app.controller('customController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function($scope, GoogleMapApi, Data){
-    $scope.controlText = 'save the marker to the list';
+  app.controller('customController', ['$scope', 'GoogleMapApi'.ns(), 'Data', '$timeout',function($scope, GoogleMapApi, Data, $timeout){
+    var msg = 'Save the marker to the list';
+    $scope.controlText = msg;
+    $scope.msg = '';
     $scope.controlClick = function(){
       // console.log('Data2', Data);
       // console.log('_.some', _.some(Data.savedList, function(item){
@@ -107,11 +113,17 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
         return item.id === Data.marker.id
       })){
         Data.marker.coords = {latitude: Data.marker.geometry.location.k, longitude: Data.marker.geometry.location.B}
+        Data.marker.labelInfo = {labelContent: Data.marker.formatted_address, labelClass: 'labelContent'};
         Data.savedList.push(Data.marker);
-      }else{
+        $scope.controlText = 'saved';
+      }else if(Data.searched){
         console.log('already in the list')
         // show "already in the list"
+        $scope.controlText = 'already in the list';
       }
+      $timeout(function(){
+        $scope.controlText = msg;
+      }, 600);
       console.log('Data.savedList', Data.savedList);
     };
   }]);
@@ -122,15 +134,23 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
     var findBound = function(){
       var northeast = {latitude: undefined, longitude: undefined};
       var southwest = {latitude: undefined, longitude: undefined};
-      for(var i = 0; i < Data.savedList.length; i++){
-        var lat = Data.savedList[i].geometry.location.k;
-        var lon = Data.savedList[i].geometry.location.B;
-        !northeast.latitude || lat > northeast.latitude ? northeast.latitude = lat: null;
-        !northeast.longitude || lon > northeast.longitude ? northeast.longitude = lon: null;
-        !southwest.latitude || lat < southwest.latitude ? southwest.latitude = lat: null;
-        !southwest.longitude || lon < southwest.longitude ? southwest.longitude = lon: null;
+      if(Data.savedList.length){
+        for(var i = 0; i < Data.savedList.length; i++){
+          var lat = Data.savedList[i].geometry.location.k;
+          var lon = Data.savedList[i].geometry.location.B;
+          !northeast.latitude || lat > northeast.latitude ? northeast.latitude = lat: null;
+          !northeast.longitude || lon > northeast.longitude ? northeast.longitude = lon: null;
+          !southwest.latitude || lat < southwest.latitude ? southwest.latitude = lat: null;
+          !southwest.longitude || lon < southwest.longitude ? southwest.longitude = lon: null;
+        }
+        return {northeast: northeast, southwest: southwest};
+      }else{
+        northeast.latitude = Data.defaultLoc.latitude;
+        northeast.longitude = Data.defaultLoc.longitude;
+        southwest.latitude = Data.defaultLoc.latitude;
+        southwest.longitude = Data.defaultLoc.longitude;
+        return {northeast: northeast, southwest: southwest};
       }
-      return {northeast: northeast, southwest: southwest};
     }
     var bounds = findBound();
     var center = {latitude: (bounds.northeast.latitude + bounds.southwest.latitude) / 2, longitude: (bounds.northeast.longitude + bounds.southwest.longitude) / 2};
@@ -149,7 +169,9 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
     angleLon < 0 ? angleLon += 360 : null;
     angleLat < 0 ? angleLat += 180 : null;
     var angle = angleLon > angleLat ? angleLon : angleLat;//east - west;
-    var zoom = Math.round(Math.log(200 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
+    console.log('angleLon', angleLon, 'angleLat', angleLat);
+    angleLon === 0 && angleLat === 0 ? angle = 0.01: null;
+    var zoom = Math.round(Math.log(300 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
     console.log('zoom', zoom);
     $scope.map = {bounds: bounds, center: center, zoom: zoom};
     $scope.options = {scrollwheel: false};
@@ -163,5 +185,21 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
 
 
   app.factory('Data', function(){
-    return {searched: false, savedList: [], searchHistory: [], marker:{}};
+    return {defaultLoc:{latitude: 34.440009, longitude: -119.738670} ,searched: false, savedList: [], searchHistory: [], marker:{}};
+  });
+
+  app.directive('savedList', function(){
+    return {
+      link: function(scope, element, attr){
+        scope.$watch('controlText', function(newValue, oldValue){
+          if(newValue === 'saved'){
+            element.css('background-color', '#000066');
+          }else if(newValue === 'already in the list'){
+            element.css('background-color', '#FF3399');
+          }else{
+            element.css('background-color', '#0099CC');
+          }
+        }, true);
+      }
+    };
   });

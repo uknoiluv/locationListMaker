@@ -14,14 +14,14 @@
 </head>
 <body>
   
-  <div>
-    <header>AngularGoogleMap</header>
+  <div class="header">
+    <header>Location List Maker</header>
   </div>
-  
-  <a ui-sref="findPlace">Find place</a>
-  <a ui-sref="savedList">Saved List</a>
-  <a ui-sref="searchHistory">Search History</a>
-
+  <div class="uiSref">
+    <a ui-sref="findPlace">Find place</a>
+    <a ui-sref="savedList">Saved List</a>
+    <a ui-sref="searchHistory">Search History</a>
+  </div>
   <div ui-view></div>
 
   <!-- <div id="map_canvas" ng-controller="mapController">
