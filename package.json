@@ -1,0 +1,11 @@
+{
+  "name": "shipHawkMap",
+  "version": "0.0.0",
+  "author": "Adrian Kim",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*",
+    "sinon": "*"
+  }
+}
