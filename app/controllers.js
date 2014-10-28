@@ -2,7 +2,6 @@
 app.controller('mapController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function($scope, GoogleMapApi, Data){
   var getLoc = {
     places_changed: function(data){
-      Data.searched = Data.searched || true;
       var places = data.getPlaces();
       var latitude = places[0].geometry.location.k;
       var longitude = places[0].geometry.location.B;
@@ -10,6 +9,7 @@ app.controller('mapController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function
       $scope.marker.coords = {latitude: latitude, longitude: longitude};
       $scope.marker.info = places[0];
       places[0].date = new Date();
+      Data.searched = Data.searched || true;
       Data.searchHistory.push(places[0]);
       Data.marker = $scope.marker.info;
     }
@@ -35,10 +35,10 @@ app.controller('customController', ['$scope', 'GoogleMapApi'.ns(), 'Data', '$tim
     if(Data.searched && !_.some(Data.savedList, function(item){
       return item.id === Data.marker.id
     })){
+      $scope.controlText = 'saved';
       Data.marker.coords = {latitude: Data.marker.geometry.location.k, longitude: Data.marker.geometry.location.B}
       Data.marker.labelInfo = {labelContent: Data.marker.formatted_address, labelClass: 'labelContent'};
       Data.savedList.push(Data.marker);
-      $scope.controlText = 'saved';
     }else if(Data.searched){
       $scope.controlText = 'already in the list';
     }
@@ -50,6 +50,7 @@ app.controller('customController', ['$scope', 'GoogleMapApi'.ns(), 'Data', '$tim
 
 app.controller('savedListController', ['$scope', 'GoogleMapApi'.ns(), 'Data', function($scope, GoogleMapApi, Data){
   $scope.list = Data.savedList;
+  var GLOBE_WIDTH = 256; 
   var findBound = function(){
     var northeast = {latitude: undefined, longitude: undefined};
     var southwest = {latitude: undefined, longitude: undefined};
@@ -76,7 +77,6 @@ app.controller('savedListController', ['$scope', 'GoogleMapApi'.ns(), 'Data', fu
   var mil = Math.pow(10, 4);
   center.latitude = Math.round(center.latitude * mil) / mil;
   center.longitude = Math.round(center.longitude * mil) / mil;
-  var GLOBE_WIDTH = 256; 
   var angleLon = bounds.northeast.longitude - bounds.southwest.longitude;
   var angleLat = bounds.northeast.latitude - bounds.southwest.latitude;
   angleLon < 0 ? angleLon += 360 : null;

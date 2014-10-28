@@ -59,7 +59,7 @@ describe('Location List Maker', function(){
         });
       });
    
-      it('should be a function', function(){
+      it('should be a function / should map location latitude and longitude to marker / data.searched should be true', function(){
         expect(typeof scope.searchbox.events.places_changed).to.equal('function');
       });
 
@@ -72,7 +72,7 @@ describe('Location List Maker', function(){
 
   });
 
-  describe('when custom controller is used', function(){
+  describe('when custom controller is used and controlClick function is triggered', function(){
 
     var scope;
     var ctrl;
@@ -114,7 +114,7 @@ describe('Location List Maker', function(){
       ctrl = $controller('savedListController', {$scope: scope, _Data_: data}); 
     }));
 
-    it('should be 50, 50 for center', function(){
+    it('should be 50, 50 for center on [{geometry: {location: {k:45, B: 45}}}, {geometry: {location: {k: 55, B: 55}}}]', function(){
       expect(scope.map.center.latitude).to.equal(50);
       expect(scope.map.center.longitude).to.equal(50);
     });
@@ -166,7 +166,7 @@ describe('Location List Maker', function(){
         });
       })
 
-      it('should be rendered', function() {
+      it('changed message should be rendered', function() {
         expect(element[0].children[0].innerHTML).to.equal('changed');
       });
     });
