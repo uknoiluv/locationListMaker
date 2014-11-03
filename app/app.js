@@ -1,7 +1,7 @@
-
-var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
-
-  app.config(['GoogleMapApiProvider'.ns(), '$stateProvider', '$urlRouterProvider', function (GoogleMapApi, $stateProvider, $urlRouterProvider) {
+(function(){
+//var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
+  angular.module('map', ['google-maps'.ns(), 'ui.router'])
+  .config(['GoogleMapApiProvider'.ns(), '$stateProvider', '$urlRouterProvider', function (GoogleMapApi, $stateProvider, $urlRouterProvider) {
     
     $urlRouterProvider.otherwise('/findPlace');
 
@@ -56,3 +56,6 @@ var app = angular.module('map', ['google-maps'.ns(), 'ui.router']);
     });
 
   }]);
+
+})();
+
