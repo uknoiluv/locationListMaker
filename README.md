@@ -12,15 +12,13 @@ To install and run this project, follow the below steps:
 `git clone https://github.com/uknoiluv/angularGoogleMap`
 
 ####2. Install Bower Modules
-`bower install`
+Inside app folder `bower install`
 
 ####3. Install Node Modules
 `npm install`
 
 ####4-1. To see the project
-`open index.html`
+Inside app folder `open index.html`
 
 ####4-2. To Run the test file
 `open ./test/specRunner.html`
-
-  
