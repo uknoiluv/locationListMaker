@@ -74,7 +74,7 @@
         return item.id === Data.marker.id
       })){
         $scope.controlText = 'saved';
-        Data.marker.coords = {latitude: Data.marker.geometry.location.k, longitude: Data.marker.geometry.location.B}
+        Data.marker.coords = {latitude: Data.marker.geometry.location.G, longitude: Data.marker.geometry.location.K}
         Data.marker.labelInfo = {labelContent: Data.marker.formatted_address, labelClass: 'labelContent'};
         Data.savedList.push(Data.marker);
       }else if(Data.searched){
