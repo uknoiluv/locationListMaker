@@ -1,22 +1,29 @@
 (function(){
   'use strict';
-  
+
   var findController = function($scope, GoogleMapApi, Data){
     var getLoc = {
       places_changed: function(data){
         var places = data.getPlaces();
-        var latitude = places[0].geometry.location.k;
-        var longitude = places[0].geometry.location.B;
+        console.log('places', data.getPlaces());
+        var latitude = places[0].geometry.location.G;
+        var longitude = places[0].geometry.location.K;
+        console.log('latitude', latitude);
+        console.log('longitude', longitude);
         $scope.map.center = {latitude: latitude, longitude: longitude};
         $scope.marker.coords = {latitude: latitude, longitude: longitude};
+        console.log('scope.marker.coords', $scope.marker.coords);
         $scope.marker.info = places[0];
         places[0].date = new Date();
         Data.searched = Data.searched || true;
         Data.searchHistory.push(places[0]);
         Data.marker = $scope.marker.info;
+        console.log('scope.map', $scope.map.center);
+        console.log('scope.marker.coords', $scope.marker.coords);
       }
     };
     $scope.map = {center: Data.defaultLoc, zoom: 14 };
+    console.log('$scope.map', $scope.map);
     $scope.options = {scrollwheel: false};
     $scope.searchbox = {template:'searchbox.tpl.html', position:'top-left', events: getLoc};
     $scope.marker = {
@@ -25,7 +32,7 @@
       options: {
         draggable: false
       }
-    };    
+    };
   };
 
 
@@ -45,7 +52,7 @@
             '<ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options">' +
             '<ui-gmap-search-box template="searchbox.template" position="searchbox.position" events="searchbox.events">' +
             '</ui-gmap-search-box>' +
-            '<ui-gmap-map-control template="control.tpl.html" position="top-left" controller="customController" index="-1"></ui-gmap-map-control>' +      
+            '<ui-gmap-map-control template="control.tpl.html" position="top-left" controller="customController" index="-1"></ui-gmap-map-control>' +
             '<ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id">' +
             '</ui-gmap-marker>' +
             '</ui-gmap-google-map>' +
@@ -93,7 +100,7 @@
 
   var savedList = function($scope, GoogleMapApi, Data){
     $scope.list = Data.savedList;
-    var GLOBE_WIDTH = 256; 
+    var GLOBE_WIDTH = 256;
     var findBound = function(){
       var northeast = {latitude: undefined, longitude: undefined};
       var southwest = {latitude: undefined, longitude: undefined};
@@ -143,8 +150,8 @@
             '</ui-gmap-markers>' +
             '</ui-gmap-google-map>' +
             '<div class="savedList">' +
-            '<ul><li class="savedListItem" ng-repeat="item in list">' + 
-            '{{$index + 1}} {{item.formatted_address}}' +   
+            '<ul><li class="savedListItem" ng-repeat="item in list">' +
+            '{{$index + 1}} {{item.formatted_address}}' +
             '</li></ul></div>' +
             '</div>',
           controllerAs: 'saved',
@@ -165,8 +172,8 @@
         .state('searchHistory', {
           url: '/searchHistory',
           template:'<div class="searchHistory">' +
-            '<ul><li ng-repeat="item in list">' + 
-            '[{{$index + 1}}] {{item.formatted_address}} {{item.date | date:"medium"}}'  +   
+            '<ul><li ng-repeat="item in list">' +
+            '[{{$index + 1}}] {{item.formatted_address}} {{item.date | date:"medium"}}'  +
             '</li></ul>' +
             '</div>',
           controllerAs: 'search',
