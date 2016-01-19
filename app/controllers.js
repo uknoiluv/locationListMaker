@@ -5,25 +5,18 @@
     var getLoc = {
       places_changed: function(data){
         var places = data.getPlaces();
-        console.log('places', data.getPlaces());
         var latitude = places[0].geometry.location.G;
         var longitude = places[0].geometry.location.K;
-        console.log('latitude', latitude);
-        console.log('longitude', longitude);
         $scope.map.center = {latitude: latitude, longitude: longitude};
         $scope.marker.coords = {latitude: latitude, longitude: longitude};
-        console.log('scope.marker.coords', $scope.marker.coords);
         $scope.marker.info = places[0];
         places[0].date = new Date();
         Data.searched = Data.searched || true;
         Data.searchHistory.push(places[0]);
         Data.marker = $scope.marker.info;
-        console.log('scope.map', $scope.map.center);
-        console.log('scope.marker.coords', $scope.marker.coords);
       }
     };
     $scope.map = {center: Data.defaultLoc, zoom: 14 };
-    console.log('$scope.map', $scope.map);
     $scope.options = {scrollwheel: false};
     $scope.searchbox = {template:'searchbox.tpl.html', position:'top-left', events: getLoc};
     $scope.marker = {
@@ -106,8 +99,8 @@
       var southwest = {latitude: undefined, longitude: undefined};
       if(Data.savedList.length){
         for(var i = 0; i < Data.savedList.length; i++){
-          var lat = Data.savedList[i].geometry.location.k;
-          var lon = Data.savedList[i].geometry.location.B;
+          var lat = Data.savedList[i].geometry.location.G;
+          var lon = Data.savedList[i].geometry.location.K;
           !northeast.latitude || lat > northeast.latitude ? northeast.latitude = lat: null;
           !northeast.longitude || lon > northeast.longitude ? northeast.longitude = lon: null;
           !southwest.latitude || lat < southwest.latitude ? southwest.latitude = lat: null;
